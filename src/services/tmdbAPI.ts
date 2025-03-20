@@ -1,7 +1,6 @@
-
 // API key should be handled more securely in a production environment
 // This is for demonstration purposes only
-const API_KEY = 'your_api_key_here';
+const API_KEY = '7787dd5dc689453346d1bca794089006';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 // Use TMDB's language parameter for Mexican Spanish
