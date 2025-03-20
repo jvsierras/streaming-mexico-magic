@@ -63,6 +63,29 @@ export interface TVShowDetails extends TVShow {
   tagline: string;
   status: string;
   created_by: { id: number; name: string; profile_path: string | null }[];
+  seasons: Season[];
+}
+
+export interface Season {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  episode_count: number;
+  air_date: string;
+}
+
+export interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  still_path: string | null;
+  air_date: string;
+  episode_number: number;
+  season_number: number;
+  vote_average: number;
+  runtime?: number;
 }
 
 // Helper function to make API requests
@@ -150,6 +173,10 @@ export async function getSimilarTVShows(tvId: number): Promise<TVShow[]> {
   return data.results;
 }
 
+export async function getSeasonEpisodes(tvId: number, seasonNumber: number): Promise<{ episodes: Episode[] }> {
+  return fetchFromTMDB<{ episodes: Episode[] }>(`/tv/${tvId}/season/${seasonNumber}`);
+}
+
 // Genres
 export async function getMovieGenres(): Promise<Genre[]> {
   const data = await fetchFromTMDB<{ genres: Genre[] }>('/genre/movie/list');
@@ -173,4 +200,155 @@ export async function searchMulti(query: string, page = 1): Promise<TMDBResponse
 export function getImageUrl(path: string | null, size: string = 'original'): string {
   if (!path) return '/placeholder.svg';
   return `https://image.tmdb.org/t/p/${size}${path}`;
+}
+
+export interface SavedContent {
+  id: number;
+  type: 'movie' | 'tv';
+  data: Movie | TVShow;
+  addedAt: number;
+}
+
+export function addToMyList(content: Movie | TVShow, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('myList');
+    let myList: SavedContent[] = savedItems ? JSON.parse(savedItems) : [];
+    
+    // Check if the item already exists
+    const exists = myList.some(item => item.id === content.id && item.type === type);
+    
+    if (!exists) {
+      myList.push({
+        id: content.id,
+        type,
+        data: content,
+        addedAt: Date.now()
+      });
+      
+      localStorage.setItem('myList', JSON.stringify(myList));
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error adding to My List:', error);
+    return false;
+  }
+}
+
+export function removeFromMyList(id: number, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('myList');
+    
+    if (savedItems) {
+      const myList: SavedContent[] = JSON.parse(savedItems);
+      const updatedList = myList.filter(
+        item => !(item.id === id && item.type === type)
+      );
+      
+      localStorage.setItem('myList', JSON.stringify(updatedList));
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error removing from My List:', error);
+    return false;
+  }
+}
+
+export function isInMyList(id: number, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('myList');
+    
+    if (savedItems) {
+      const myList: SavedContent[] = JSON.parse(savedItems);
+      return myList.some(item => item.id === id && item.type === type);
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error checking My List:', error);
+    return false;
+  }
+}
+
+export function addToFavorites(content: Movie | TVShow, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('favorites');
+    let favorites: SavedContent[] = savedItems ? JSON.parse(savedItems) : [];
+    
+    // Check if the item already exists
+    const exists = favorites.some(item => item.id === content.id && item.type === type);
+    
+    if (!exists) {
+      favorites.push({
+        id: content.id,
+        type,
+        data: content,
+        addedAt: Date.now()
+      });
+      
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error adding to Favorites:', error);
+    return false;
+  }
+}
+
+export function removeFromFavorites(id: number, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('favorites');
+    
+    if (savedItems) {
+      const favorites: SavedContent[] = JSON.parse(savedItems);
+      const updatedList = favorites.filter(
+        item => !(item.id === id && item.type === type)
+      );
+      
+      localStorage.setItem('favorites', JSON.stringify(updatedList));
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error removing from Favorites:', error);
+    return false;
+  }
+}
+
+export function isInFavorites(id: number, type: 'movie' | 'tv'): boolean {
+  try {
+    const savedItems = localStorage.getItem('favorites');
+    
+    if (savedItems) {
+      const favorites: SavedContent[] = JSON.parse(savedItems);
+      return favorites.some(item => item.id === id && item.type === type);
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error checking Favorites:', error);
+    return false;
+  }
+}
+
+export function getMyList(): SavedContent[] {
+  try {
+    const savedItems = localStorage.getItem('myList');
+    return savedItems ? JSON.parse(savedItems) : [];
+  } catch (error) {
+    console.error('Error getting My List:', error);
+    return [];
+  }
+}
+
+export function getFavorites(): SavedContent[] {
+  try {
+    const savedItems = localStorage.getItem('favorites');
+    return savedItems ? JSON.parse(savedItems) : [];
+  } catch (error) {
+    console.error('Error getting Favorites:', error);
+    return [];
+  }
 }

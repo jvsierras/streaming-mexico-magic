@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -16,6 +17,8 @@ import { Button } from '@/components/ui/button';
 import ContentRow from '@/components/ContentRow';
 import NavBar from '@/components/NavBar';
 import VideoPlayer from '@/components/VideoPlayer';
+import TVShowSeasons from '@/components/TVShowSeasons';
+import ContentActions from '@/components/ContentActions';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const TVShowDetail = () => {
@@ -161,7 +164,7 @@ const TVShowDetail = () => {
                   {tvShow.overview}
                 </p>
                 
-                <div className="pt-2">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button 
@@ -176,10 +179,25 @@ const TVShowDetail = () => {
                       <VideoPlayer tmdbId={tvId} type="tv" />
                     </DialogContent>
                   </Dialog>
+                  
+                  <ContentActions 
+                    content={tvShow} 
+                    type="tv" 
+                    size="lg"
+                  />
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      
+      {/* Seasons and Episodes */}
+      <div className="py-10 px-6">
+        <div className="max-w-7xl mx-auto">
+          {tvShow.seasons && tvShow.seasons.length > 0 && (
+            <TVShowSeasons tvId={tvId} seasons={tvShow.seasons} />
+          )}
         </div>
       </div>
       
