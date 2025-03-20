@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -16,6 +15,8 @@ import {
 import { Button } from '@/components/ui/button';
 import ContentRow from '@/components/ContentRow';
 import NavBar from '@/components/NavBar';
+import VideoPlayer from '@/components/VideoPlayer';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const TVShowDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -161,13 +162,20 @@ const TVShowDetail = () => {
                 </p>
                 
                 <div className="pt-2">
-                  <Button 
-                    className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
-                    size="lg"
-                  >
-                    <Play className="w-5 h-5" />
-                    Reproducir
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
+                        size="lg"
+                      >
+                        <Play className="w-5 h-5" />
+                        Reproducir
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card">
+                      <VideoPlayer tmdbId={tvId} type="tv" />
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>

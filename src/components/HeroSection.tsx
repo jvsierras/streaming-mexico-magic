@@ -5,6 +5,8 @@ import { Play, Info } from 'lucide-react';
 import { Movie, TVShow, getImageUrl } from '@/services/tmdbAPI';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import VideoPlayer from './VideoPlayer';
 
 interface HeroSectionProps {
   item: Movie | TVShow;
@@ -69,13 +71,21 @@ const HeroSection = ({ item, type }: HeroSectionProps) => {
         </p>
         
         <div className="flex flex-wrap gap-4 pt-2 animate-slide-up" style={{ animationDelay: '400ms' }}>
-          <Button 
-            className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
-            size="lg"
-          >
-            <Play className="w-5 h-5" />
-            Reproducir
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button 
+                className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
+                size="lg"
+              >
+                <Play className="w-5 h-5" />
+                Reproducir
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card">
+              <VideoPlayer tmdbId={item.id} type={type} />
+            </DialogContent>
+          </Dialog>
+          
           <Link to={`/${type}/${item.id}`}>
             <Button 
               variant="secondary"

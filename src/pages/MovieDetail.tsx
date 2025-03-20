@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -16,6 +15,8 @@ import {
 import { Button } from '@/components/ui/button';
 import ContentRow from '@/components/ContentRow';
 import NavBar from '@/components/NavBar';
+import VideoPlayer from '@/components/VideoPlayer';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -97,10 +98,8 @@ const MovieDetail = () => {
           style={{ backgroundImage: `url(${getImageUrl(movie.backdrop_path)})` }}
         />
         
-        {/* Gradient overlay */}
         <div className="absolute inset-0 hero-gradient" />
         
-        {/* Back button */}
         <Link 
           to="/" 
           className="absolute top-24 left-6 z-20 flex items-center gap-2 text-white hover:text-streaming-accent transition-colors"
@@ -109,10 +108,8 @@ const MovieDetail = () => {
           <span>Regresar</span>
         </Link>
         
-        {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-12">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
-            {/* Poster */}
             <div className="hidden md:block w-[220px] h-[330px] flex-shrink-0">
               <img 
                 src={getImageUrl(movie.poster_path, 'w500')} 
@@ -121,7 +118,6 @@ const MovieDetail = () => {
               />
             </div>
             
-            {/* Details */}
             <div className="flex-1 animate-slide-up">
               <div className="space-y-4">
                 <div>
@@ -168,13 +164,20 @@ const MovieDetail = () => {
                 </p>
                 
                 <div className="pt-2">
-                  <Button 
-                    className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
-                    size="lg"
-                  >
-                    <Play className="w-5 h-5" />
-                    Reproducir
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        className="bg-streaming-accent hover:bg-streaming-accent/90 text-white gap-2"
+                        size="lg"
+                      >
+                        <Play className="w-5 h-5" />
+                        Reproducir
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card">
+                      <VideoPlayer tmdbId={movieId} type="movie" />
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
@@ -182,7 +185,6 @@ const MovieDetail = () => {
         </div>
       </div>
       
-      {/* Cast Section */}
       {cast.length > 0 && (
         <div className="py-10 px-6">
           <div className="max-w-7xl mx-auto">
@@ -208,7 +210,6 @@ const MovieDetail = () => {
         </div>
       )}
       
-      {/* Similar Movies */}
       {similarMovies && similarMovies.length > 0 && (
         <ContentRow 
           title="Películas Similares" 
