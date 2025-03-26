@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Search as SearchIcon } from 'lucide-react';
+import { Search as SearchIcon, Loader2 } from 'lucide-react';
 import { searchMulti } from '@/services/tmdbAPI';
 import NavBar from '@/components/NavBar';
 import ContentCard from '@/components/ContentCard';
@@ -57,7 +57,11 @@ const Search = () => {
                 placeholder="Buscar películas, series y más..."
                 className="bg-streaming-card border-streaming-card focus-visible:ring-streaming-accent h-12 pl-12 text-base"
               />
-              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-streaming-text-secondary" />
+              {isLoading ? (
+                <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-streaming-text-secondary animate-spin" />
+              ) : (
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-streaming-text-secondary" />
+              )}
             </div>
           </form>
           
@@ -81,7 +85,7 @@ const Search = () => {
                 </div>
               ) : hasResults ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                  {results.map((item) => (
+                  {results.filter(item => item.media_type === 'movie' || item.media_type === 'tv').map((item) => (
                     <div key={item.id}>
                       <ContentCard 
                         item={item} 

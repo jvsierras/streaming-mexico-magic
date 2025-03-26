@@ -24,7 +24,6 @@ const MovieDetail = () => {
   
   const movieId = parseInt(id || '0');
 
-  // Fetch movie details
   const { data: movie, isError: movieError } = useQuery({
     queryKey: ['movie', movieId],
     queryFn: () => getMovieDetails(movieId),
@@ -32,7 +31,6 @@ const MovieDetail = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Fetch movie cast
   const { data: creditsData, isError: creditsError } = useQuery({
     queryKey: ['movieCredits', movieId],
     queryFn: () => getMovieCast(movieId),
@@ -40,7 +38,6 @@ const MovieDetail = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Fetch similar movies
   const { data: similarMovies, isError: similarMoviesError } = useQuery({
     queryKey: ['similarMovies', movieId],
     queryFn: () => getSimilarMovies(movieId),
@@ -48,7 +45,6 @@ const MovieDetail = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Handle backdrop image loading
   useEffect(() => {
     if (movie?.backdrop_path) {
       const img = new Image();
@@ -57,14 +53,12 @@ const MovieDetail = () => {
     }
   }, [movie]);
 
-  // Show error toast on API errors
   useEffect(() => {
     if (movieError || creditsError || similarMoviesError) {
       toast.error('Error al cargar los detalles de la película. Por favor, inténtalo de nuevo más tarde.');
     }
   }, [movieError, creditsError, similarMoviesError]);
 
-  // Format runtime to hours and minutes
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -87,7 +81,6 @@ const MovieDetail = () => {
     <div className="min-h-screen bg-streaming-background text-streaming-text">
       <NavBar />
       
-      {/* Hero Section with Backdrop */}
       <div className="relative w-full" style={{ height: '70vh' }}>
         <div 
           className={`absolute inset-0 bg-streaming-card transition-opacity duration-1000 ${isLoading ? 'opacity-100' : 'opacity-0'}`}

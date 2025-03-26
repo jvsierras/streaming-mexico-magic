@@ -1,10 +1,10 @@
 
 import { Link } from 'react-router-dom';
-import { Calendar, Star, ArrowLeft, Film, Play } from 'lucide-react';
+import { Calendar, Star, ArrowLeft, Film, Play, X } from 'lucide-react';
 import { TVShowDetails, getImageUrl } from '@/services/tmdbAPI';
 import { Button } from '@/components/ui/button';
 import ContentActions from '@/components/ContentActions';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 import VideoPlayer from '@/components/VideoPlayer';
 
 interface TVShowDetailHeroProps {
@@ -106,7 +106,11 @@ const TVShowDetailHero = ({ tvShow, tvId, isLoading }: TVShowDetailHeroProps) =>
                       Reproducir
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card">
+                  <DialogContent 
+                    className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card"
+                    onEscapeKeyDown={(e) => e.preventDefault()}
+                    onPointerDownOutside={(e) => e.preventDefault()}
+                  >
                     <VideoPlayer tmdbId={tvId} type="tv" />
                   </DialogContent>
                 </Dialog>

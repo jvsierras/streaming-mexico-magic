@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DialogTitle } from "@/components/ui/dialog";
+import { DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 
 interface VideoPlayerProps {
   tmdbId: number;
@@ -14,7 +16,10 @@ const VideoPlayer = ({ tmdbId, type, seasonNumber, episodeNumber }: VideoPlayerP
   // For TV episodes with season and episode numbers, use the autoembed.co link
   if (type === 'tv' && seasonNumber && episodeNumber) {
     return (
-      <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
+      <div className="w-full aspect-video bg-black rounded-lg overflow-hidden relative">
+        <DialogClose className="absolute right-2 top-2 z-50 p-1 rounded-full bg-black/70 hover:bg-black text-white">
+          <X className="h-5 w-5" />
+        </DialogClose>
         <iframe 
           className="w-full h-full" 
           src={`https://autoembed.co/tv/tmdb/${tmdbId}-${seasonNumber}-${episodeNumber}`}
@@ -35,7 +40,10 @@ const VideoPlayer = ({ tmdbId, type, seasonNumber, episodeNumber }: VideoPlayerP
   };
 
   return (
-    <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
+    <div className="w-full aspect-video bg-black rounded-lg overflow-hidden relative">
+      <DialogClose className="absolute right-2 top-2 z-50 p-1 rounded-full bg-black/70 hover:bg-black text-white">
+        <X className="h-5 w-5" />
+      </DialogClose>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
         <div className="bg-black/80 p-2">
           <TabsList className="grid grid-cols-3 w-full max-w-md mx-auto">
