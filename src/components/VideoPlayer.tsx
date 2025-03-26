@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DialogTitle } from "@/components/ui/dialog";
 
 interface VideoPlayerProps {
   tmdbId: number;
@@ -11,12 +11,27 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ tmdbId, type, seasonNumber, episodeNumber }: VideoPlayerProps) => {
+  // For TV episodes with season and episode numbers, use the autoembed.co link
+  if (type === 'tv' && seasonNumber && episodeNumber) {
+    return (
+      <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
+        <iframe 
+          className="w-full h-full" 
+          src={`https://autoembed.co/tv/tmdb/${tmdbId}-${seasonNumber}-${episodeNumber}`}
+          allowFullScreen
+          title={`Episode ${episodeNumber} Player`}
+        ></iframe>
+      </div>
+    );
+  }
+  
+  // For movies or TV shows without specific episode information, keep using the tabs
   const [activeTab, setActiveTab] = useState("vidsrc");
   
   const videoSources = {
-    vidsrc: `https://vidsrc.xyz/embed/${type}?tmdb=${tmdbId}${seasonNumber && episodeNumber ? `&season=${seasonNumber}&episode=${episodeNumber}` : ''}&ds_lang=Spanish`,
-    multiembed: `https://multiembed.mov/?video_id=${tmdbId}&tmdb=1${seasonNumber && episodeNumber ? `&s=${seasonNumber}&e=${episodeNumber}` : ''}`,
-    embed2: `https://www.2embed.cc/embed/${tmdbId}${seasonNumber && episodeNumber ? `/s${seasonNumber}/e${episodeNumber}` : ''}`,
+    vidsrc: `https://vidsrc.xyz/embed/${type}?tmdb=${tmdbId}&ds_lang=Spanish`,
+    multiembed: `https://multiembed.mov/?video_id=${tmdbId}&tmdb=1`,
+    embed2: `https://www.2embed.cc/embed/${tmdbId}`,
   };
 
   return (

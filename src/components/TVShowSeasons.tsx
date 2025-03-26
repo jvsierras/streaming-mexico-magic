@@ -12,7 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, Play, Star } from 'lucide-react';
 import { getSeasonEpisodes, Episode, Season, getImageUrl } from '@/services/tmdbAPI';
@@ -138,7 +138,15 @@ const TVShowSeasons = ({ tvId, seasons }: TVShowSeasonsProps) => {
                                 </Button>
                               </DialogTrigger>
                               <DialogContent className="max-w-6xl w-[95vw] p-1 sm:p-2 bg-black border-streaming-card">
-                                <VideoPlayer tmdbId={tvId} type="tv" seasonNumber={episode.season_number} episodeNumber={episode.episode_number} />
+                                <DialogTitle className="sr-only">
+                                  {`${season.name} - Episodio ${episode.episode_number}: ${episode.name}`}
+                                </DialogTitle>
+                                <VideoPlayer 
+                                  tmdbId={tvId} 
+                                  type="tv" 
+                                  seasonNumber={episode.season_number} 
+                                  episodeNumber={episode.episode_number} 
+                                />
                               </DialogContent>
                             </Dialog>
                           </div>
