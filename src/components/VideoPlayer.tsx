@@ -6,15 +6,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface VideoPlayerProps {
   tmdbId: number;
   type: 'movie' | 'tv';
+  seasonNumber?: number;
+  episodeNumber?: number;
 }
 
-const VideoPlayer = ({ tmdbId, type }: VideoPlayerProps) => {
+const VideoPlayer = ({ tmdbId, type, seasonNumber, episodeNumber }: VideoPlayerProps) => {
   const [activeTab, setActiveTab] = useState("vidsrc");
   
   const videoSources = {
-    vidsrc: `https://vidsrc.xyz/embed/${type}?tmdb=${tmdbId}&ds_lang=Spanish`,
-    multiembed: `https://multiembed.mov/?video_id=${tmdbId}&tmdb=1`,
-    embed2: `https://www.2embed.cc/embed/${tmdbId}`,
+    vidsrc: `https://vidsrc.xyz/embed/${type}?tmdb=${tmdbId}${seasonNumber && episodeNumber ? `&season=${seasonNumber}&episode=${episodeNumber}` : ''}&ds_lang=Spanish`,
+    multiembed: `https://multiembed.mov/?video_id=${tmdbId}&tmdb=1${seasonNumber && episodeNumber ? `&s=${seasonNumber}&e=${episodeNumber}` : ''}`,
+    embed2: `https://www.2embed.cc/embed/${tmdbId}${seasonNumber && episodeNumber ? `/s${seasonNumber}/e${episodeNumber}` : ''}`,
   };
 
   return (
